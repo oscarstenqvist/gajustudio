@@ -94,7 +94,7 @@ export class CompilerService {
 
   public TESTNET_URL = 'https://testnet.aeternity.io';
   public MAINNET_URL = 'https://mainnet.aeternity.io';
-  public COMPILER_URL = 'https://latest.compiler.aepps.com';
+  public COMPILER_URL = 'https://v8.compiler.aepps.com';
 
   public aeternity: any = {
     rpcClient: null,

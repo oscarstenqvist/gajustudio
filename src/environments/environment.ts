@@ -8,8 +8,8 @@ export const environment = {
     'https://xfs2awe868.execute-api.eu-central-1.amazonaws.com/dev/candidates/',
   appUrl: 'http://localhost:4200/',
   testnetFaucetUrl: 'https://testnet.faucet.aepps.com/account/',
-  compilerURL: 'https://v7.compiler.aepps.com',
-  debugCompilerURL: 'https://v7.compiler.aepps.com',
+  compilerURL: 'https://v8.compiler.aepps.com',
+  debugCompilerURL: 'https://v8.compiler.aepps.com',
   publicTestnetURL: 'https://testnet.aeternity.io',
   compilerRequestDelay: 400,
   firebase: {
