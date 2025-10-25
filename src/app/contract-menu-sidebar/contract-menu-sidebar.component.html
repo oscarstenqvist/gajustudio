@@ -23,64 +23,44 @@
             <i class="dropdown icon"></i>
             <div class="menu" suiDropdownMenu>
               <ng-container *ngIf="currentSDKsettings">
-                <div
-                  *ngFor="let address of currentSDKsettings.addresses"
-                  (click)="changeSDKsetting('selectAccount', address)"
-                  class="item"
-                  suiPopup
-                  popupHeader="{{
+                <div *ngFor="let address of currentSDKsettings.addresses"
+                  (click)="changeSDKsetting('selectAccount', address)" class="item" suiPopup popupHeader="{{
                     compiler.Chain.currentWalletProvider == 'extension'
                       ? 'Private Wallet account'
                       : !auth.theUser
                         ? 'Public Demo Accounts!'
                         : 'Personal     Testnet Account'
-                  }}"
-                  popupText=" {{
+                  }}" popupText=" {{
                     compiler.Chain.currentWalletProvider == 'extension'
                       ? 'This account is provided by your browser wallet and is to be considered safe.'
                       : !auth.theUser
                         ? 'Click the user Tab and get your free personal testnet accounts'
                         : 'Do NEVER use this account on the mainnet. It is for developing purposes only.'
-                  }} "
-                  popupPlacement="top right"
-                  popupDelay="{{ auth.theUser ? 600 : 0 }}"
-                >
+                  }} " popupPlacement="top right" popupDelay="{{ auth.theUser ? 600 : 0 }}">
                   <span class="description">
                     <!-- logged-in user icon: -->
-                    <i
-                      style="color: #f2721d"
-                      *ngIf="auth.theUser && compiler.sdkConfigOverrides.personalAccounts"
-                      class="user icon"
-                    ></i>
+                    <i style="color: #f2721d" *ngIf="auth.theUser && compiler.sdkConfigOverrides.personalAccounts"
+                      class="user icon"></i>
                     <!-- public testnet accounts icon -->
-                    <i
-                      style="color: #c5283d"
+                    <i style="color: #c5283d"
                       *ngIf="!auth.theUser && compiler.Chain.currentWalletProvider != 'extension'"
-                      class="unlock icon"
-                    ></i>
+                      class="unlock icon"></i>
                     <!-- wallet extension user icon -->
-                    <i
-                      style="color: rgb(53, 184, 41)"
-                      *ngIf="compiler.Chain.currentWalletProvider == 'extension'"
-                      class="lock icon"
-                    ></i>
+                    <i style="color: rgb(53, 184, 41)" *ngIf="compiler.Chain.currentWalletProvider == 'extension'"
+                      class="lock icon"></i>
 
                     <!-- Display all balances >= 1000 AE as 1K etc. -->
-                    <ng-container
-                      *ngIf="currentSDKsettings.balances[address] / 1000000000000000000 < 1000"
-                    >
+                    <ng-container *ngIf="currentSDKsettings.balances[address] / 1000000000000000000 < 1000">
                       {{
-                        currentSDKsettings.balances[address] / 1000000000000000000 | number: '1.0-2'
+                      currentSDKsettings.balances[address] / 1000000000000000000 | number: '1.0-2'
                       }}
                       AE
                     </ng-container>
 
-                    <ng-container
-                      *ngIf="currentSDKsettings.balances[address] / 1000000000000000000 >= 1000"
-                    >
+                    <ng-container *ngIf="currentSDKsettings.balances[address] / 1000000000000000000 >= 1000">
                       {{
-                        currentSDKsettings.balances[address] / 1000000000000000000 / 1000
-                          | number: '1.0-0'
+                      currentSDKsettings.balances[address] / 1000000000000000000 / 1000
+                      | number: '1.0-0'
                       }}K AE
                     </ng-container>
                   </span>
@@ -93,11 +73,7 @@
                       <div class="column">4</div>
                     </div>
                   </div>
-                  <p
-                    class="truncate"
-                    (click)="changeSDKsetting('selectAccount', address)"
-                    class="address-item"
-                  >
+                  <p class="truncate" (click)="changeSDKsetting('selectAccount', address)" class="address-item">
                     {{ (address | slice: 0 : 28) + '...' }}
                   </p>
                 </div>
@@ -144,27 +120,17 @@
           <ng-container *ngIf="currentSDKsettings">
             <a id="options-balancelabel" class="ui basic label">
               {{
-                currentSDKsettings.balances[currentSDKsettings.address] / 1000000000000000000
-                  | number: '1.0-2'
+              currentSDKsettings.balances[currentSDKsettings.address] / 1000000000000000000
+              | number: '1.0-2'
               }}
               AE
             </a>
           </ng-container>
 
-          <button
-            class="ui basic button"
-            style="margin-left: 10px; display: none; border-radius: 6px"
-            id="copy_btn"
-            suiPopup
-            popupHeader=""
-            popupTrigger="manual"
-            popupPlacement="top right"
-            popupDelay="600"
-            popupText="Copied current Address!"
-            #popup="suiPopup"
-            (click)="copyAddress(); popup.open()"
-            (mouseout)="popup.close()"
-          >
+          <button class="ui basic button" style="margin-left: 10px; display: none; border-radius: 6px" id="copy_btn"
+            suiPopup popupHeader="" popupTrigger="manual" popupPlacement="top right" popupDelay="600"
+            popupText="Copied current Address!" #popup="suiPopup" (click)="copyAddress(); popup.open()"
+            (mouseout)="popup.close()">
             <i class="copy icon" style="color: black"></i>
           </button>
         </div>
@@ -174,22 +140,25 @@
       <!-- Wallet Switch-->
       <app-wallet-switch> </app-wallet-switch>
 
-      <div
-        *ngIf="!compiler.walletExtensionPresent"
-        style="width: 100%"
-        class="ui pointing orange basic label"
-      >
+      <div *ngIf="compiler.Chain?.currentWalletProvider == 'extension'" class="field"
+        style="text-align: center; margin-top: 10px;">
+        <label style="font-weight: bold;" suiPopup popupHeader="Network Information" popupTrigger="hover"
+          popupText="The current blockchain network your wallet is connected to. Change this in your wallet extension settings."
+          popupPlacement="left center">
+          Network: {{ displayNetworkName }}
+          <i class="info circle icon"></i>
+        </label>
+      </div>
+
+      <div *ngIf="!compiler.walletExtensionPresent" style="width: 100%" class="ui pointing orange basic label">
         <p>
           Install
-          <a
-            href="{{
+          <a href="{{
               compiler.currentBrowser == 'firefox'
                 ? 'https://addons.mozilla.org/en-US/firefox/addon/superhero-wallet/'
                 : 'https://chrome.google.com/webstore/detail/superhero/mnhmmkepfddpifjkamaligfeemcbhdne?hl=en'
-            }}"
-          >
-            Superhero Wallet</a
-          >
+            }}">
+            Superhero Wallet</a>
           and use AE Studio with Aeternity mainnet !
         </p>
       </div>
@@ -222,24 +191,17 @@
       <div class="right">
         <div class="div2"><b>Optional: Looks like you forgot the init function ? </b></div>
 
-        <div
-          class="div3"
-          style="background: #f8dda4; padding-bottom: 0; margin-top: 1em"
-          *ngIf="true"
-        >
+        <div class="div3" style="background: #f8dda4; padding-bottom: 0; margin-top: 1em" *ngIf="true">
           Hint: The optional init() function runs code during the deployment of a contract and is
           never callable again. As its return it must define all data in your state with some value
           of your choice. Like:
-          <div
-            class="code"
-            style="
+          <div class="code" style="
               padding: 2px;
               padding-left: 5px;
               margin-top: 1em;
               font-family: Courier New;
               font-size: 11px;
-            "
-          >
+            ">
             {{ 'stateful entrypoint init(num1 : int, num2: int) =' }} <br />
             &nbsp; &nbsp; {{ 'let sum = num1 + num2' }} <br />
             &nbsp; &nbsp; {{ '// next comes the last statement ' }} <br />
@@ -284,54 +246,36 @@
     <div *ngIf="true" class="ui buttons">
       <button (click)="deployContract()" class="ui black button">Deploy</button>
       <div class="or"></div>
-      <button
-        (click)="deployContract(true)"
-        class="ui orange button atAddressButton"
-        suiPopup
-        popupHeader="Please Note"
+      <button (click)="deployContract(true)" class="ui orange button atAddressButton" suiPopup popupHeader="Please Note"
         popupTrigger="hover"
-        popupText="Currently, the SDK checks the validity of the entered address only upon attempting to call contract functions, this issue is being taken care of."
-      >
+        popupText="Currently, the SDK checks the validity of the entered address only upon attempting to call contract functions, this issue is being taken care of.">
         Use at address:
       </button>
     </div>
     <!-- "at address" field -->
     <div class="ui icon input">
-      <input
-        [(ngModel)]="addressOfExistingContract"
-        type="text"
-        class="atAddressField"
-        placeholder="ct_nv5B9...Mp59bv..."
-      />
+      <input [(ngModel)]="addressOfExistingContract" type="text" class="atAddressField"
+        placeholder="ct_nv5B9...Mp59bv..." />
       <i class="search icon"></i>
     </div>
 
     <!-- TODO: instead of relying the init function always coming first, find a way to directly pick the init function !  -->
-    <div
-      *ngIf="
+    <div *ngIf="
         initACI.functions[0] != undefined &&
         initACI.functions[0].name == 'init' &&
         initACI.functions[0].arguments.length > 0
-      "
-    >
+      ">
       <form class="ui form">
         <!-- todo: Also here, get the init function directly from somewhere -->
         <div class="field" *ngFor="let arg of initACI.functions[0].arguments">
-          <label class="arg-label" for="{{ initACI.name + 'init' + '-' + arg.name }}"
-            >{{ arg.name | replace: '_' : ' ' }} :
+          <label class="arg-label" for="{{ initACI.name + 'init' + '-' + arg.name }}">{{ arg.name | replace: '_' : ' '
+            }} :
           </label>
 
-          <input
-            [(ngModel)]="this.initACI.functions[0].arguments[arg.IDEindex].currentInput"
-            (ngModelChange)="
+          <input [(ngModel)]="this.initACI.functions[0].arguments[arg.IDEindex].currentInput" (ngModelChange)="
               logTemp(this.initACI.functions[0].arguments[arg.IDEindex].currentInput)
-            "
-            name="{{ initACI.name + 'init' + '-' + arg.name }}"
-            type="text"
-            class="arg-field"
-            id="{{ initACI.name + 'init' + '-' + arg.name }}"
-            placeholder="{{ arg.type }}"
-          />
+            " name="{{ initACI.name + 'init' + '-' + arg.name }}" type="text" class="arg-field"
+            id="{{ initACI.name + 'init' + '-' + arg.name }}" placeholder="{{ arg.type }}" />
         </div>
       </form>
     </div>
@@ -343,32 +287,18 @@
 
 <!-- Deployed contracts start -->
 <div id="deployedContracts" (mouseover)="hover = true" (mouseleave)="hover = false">
-  <span
-    [ngStyle]="{
+  <span [ngStyle]="{
       'box-shadow':
         hover == true
           ? '0 4px 8px 0 rgba(34,36,38,.12), 0 2px 10px 0 rgba(34,36,38,.08)'
           : '0 1px 2px 0 rgba(34,36,38,.15)',
-    }"
-  >
-    <div
-      *ngIf="activeContracts.length > 0"
-      id="deployedContractsLabel"
-      class="ui orange segment container"
-    >
+    }">
+    <div *ngIf="activeContracts.length > 0" id="deployedContractsLabel" class="ui orange segment container">
       <a class="ui orange ribbon label">Deployed Contracts</a>
     </div>
-    <sui-accordion
-      [transitionDuration]="500"
-      [closeOthers]="true"
-      id="deployedContractsDropdown"
-      class="styled fluid"
-    >
-      <app-deployed-contract
-        *ngFor="let contract of activeContracts"
-        (deleteContract)="deleteFromActiveContracts(contract)"
-        [contract]="contract"
-      ></app-deployed-contract>
+    <sui-accordion [transitionDuration]="500" [closeOthers]="true" id="deployedContractsDropdown" class="styled fluid">
+      <app-deployed-contract *ngFor="let contract of activeContracts"
+        (deleteContract)="deleteFromActiveContracts(contract)" [contract]="contract"></app-deployed-contract>
     </sui-accordion>
   </span>
 </div>

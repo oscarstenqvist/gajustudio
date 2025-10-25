@@ -25,6 +25,13 @@ import {
   ContractWithMethodsExtended,
 } from './helpers/interfaces';
 import BrowserConnection from '@aeternity/aepp-sdk/es/aepp-wallet-communication/connection/Browser';
+import { WalletInfo } from '@aeternity/aepp-sdk/es/aepp-wallet-communication/rpc/types';
+
+export interface SdkSettingsReport {
+  address: string;
+  addresses: string[];
+  networkId: string;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -130,56 +137,14 @@ export class CompilerService {
         { name: 'ae_uat', instance: new Node(this.TESTNET_URL) },
       ],
       onCompiler: new CompilerHttp(this.defaultOrCustomSDKsetting('compilerUrl')),
-      /*
-    onNetworkChange: (params) => {
-      console.log('Compiler: wallet network change');
-      // TODO: Handle network change
-      // this.selectNode(params.networkId); // params.networkId needs to be defined as node in RpcAepp
-      // this.aeternity.initProvider();
-    },
-    onAddressChange: (addresses) => {
-      // if (!addresses.current[this.aeternity.address]) {
-        console.log('Compiler: wallet addressChange 2');
-        // }
-      }
-      */
     });
 
     const connection = await this.detectWallets();
 
-    const walletInfo = await this.Chain.connectToWallet(connection as BrowserConnection);
+    const walletInfo: WalletInfo = await this.Chain.connectToWallet(connection as BrowserConnection);
     console.log('Connected to', walletInfo);
     this.aeternity.client = this.Chain;
-    await this.onWalletSearchSuccess(connection);
-
-    //const connection = new BrowserWindowMessageConnection();
-
-    // const detector = new Detector({ connection: scannerConnection });
-
-    /*   // detector.stopScan();
-    newWallet ? this.cachedWallet = newWallet : true;
-    console.log("newwallet:", newWallet);
-    console.log("wallets:", wallets);
-    console.log("cachedWallet", this.cachedWallet);
-    console.log("one wallet" , Object.values(wallets)[0])
-
-    const wallet = newWallet ? newWallet : wallets[this.aeternity.detectedWallet];
-    this.aeternity.detectedWallet = wallet.id;
-
-    //let connected = await aeternity.rpcClient.connectToWallet(await wallet.getConnection());
-
-
-    //const walletConnection = newWallet ? await newWallet.getConnection() : this.cachedWallet.getConnection()
-
-    const connected = await this.Chain.connectToWallet(await wallet.getConnection());
-
-    this.Chain.selectNode(connected.networkId); // connected.networkId needs to be defined as node in RpcAepp
-    await this.Chain.subscribeAddress('subscribe', 'current');
-    this.aeternity.client = this.Chain;
-    this.aeternity.static = false;
-    await this.aeternity.initProvider(true);
-    successCallback();
- */
+    await this.onWalletSearchSuccess(connection, walletInfo);
   };
 
   //sunset eventually, could be superseded bythis.detectWallets()
@@ -245,11 +210,22 @@ export class CompilerService {
     //TODO: handle case of rejecting the wallet connection
   };
 
-  public onWalletSearchSuccess = async (connection) => {
+  public onWalletSearchSuccess = async (connection, walletInfo: WalletInfo) => {
     console.log('Compiler: Wallet search complete!');
     console.log("Wallet's SDK:", this.Chain);
     console.log('Browser connection:', connection);
     this.Chain.currentWalletProvider = 'extension';
+
+    // Select node network according to wallet network
+    if (walletInfo.networkId) {
+      this.Chain.selectNode(walletInfo.networkId);
+    }
+
+    // Subscribe to network changes from wallet and update node network accordingly
+    (this.Chain as AeSdkAeppExtended).onNetworkChange = async ({ networkId }) => {
+      this.Chain.selectNode(networkId);
+      this._notifyCurrentSDKsettings.next({ type: 'extension', settings: { ...sdkSettingsToReport, networkId } });
+    };
 
     const {
       address: { current },
@@ -265,17 +241,11 @@ export class CompilerService {
     //console.log("wallet's account?", Object.keys(this.Chain.accounts.current)[0].toString())
 
     // put data where other components expect it to be
-    let sdkSettingsToReport: any = {};
-
-    //wallets:
-    console.log('TODO: obtain the information for following commented block!');
-
-    sdkSettingsToReport.addresses = [currentAddress];
-
-    sdkSettingsToReport.address = currentAddress;
-
-    /*  sdkSettingsToReport.getNodeInfo = { nodeNetworkId : this.Chain.rpcClient.info.networkId }
-  console.log("Compiler: Wallet-SDK settings:", sdkSettingsToReport) */
+    let sdkSettingsToReport: SdkSettingsReport = {
+      address: currentAddress,
+      addresses: [currentAddress],
+      networkId: walletInfo.networkId,
+    };
 
     this._notifyCurrentSDKsettings.next({ type: 'extension', settings: sdkSettingsToReport });
     this.providerToggleInProcess = false; // for the switch toggle in the right menu bar
@@ -600,7 +570,7 @@ export class CompilerService {
       console.log('fetching errors...');
       var returnValue;
       this.getErrorsFromDebugCompiler(sourceCode).subscribe(
-        (data: EncodedACI) => {},
+        (data: EncodedACI) => { },
         (error) => {
           console.log('Found the error:', error.error[0]);
           returnValue = error.error[0];

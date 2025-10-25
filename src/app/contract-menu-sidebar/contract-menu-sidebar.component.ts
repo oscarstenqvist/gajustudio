@@ -66,7 +66,7 @@ export class ContractMenuSidebarComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private http: HttpClient,
     private auth: AuthService,
-  ) {}
+  ) { }
 
   /*  buildAContract() {
     // make compiler emit event
@@ -323,4 +323,16 @@ export class ContractMenuSidebarComponent implements OnInit {
 
   } */
   };
+
+  get displayNetworkName(): string {
+    const networkId = this.currentSDKsettings?.networkId;
+
+    if (networkId === 'ae_mainnet') {
+      return 'Mainnet';
+    } else if (networkId === 'ae_uat') {
+      return 'Testnet';
+    }
+
+    return networkId || 'Unknown';
+  }
 }
