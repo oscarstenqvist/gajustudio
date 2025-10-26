@@ -285,6 +285,35 @@
   <div class="ui section divider"></div>
 </div>
 
+<!-- Import Deployed Contract -->
+<div class="ui orange segment container">
+  <a class="ui orange ribbon label">Import Deployed Contract</a>
+  <h4>Load Existing Contract</h4>
+  <p style="font-size: 12px; opacity: 0.8;">
+    Enter a contract address to load and interact with a deployed contract.
+  </p>
+
+  <div class="ui action input fluid" style="margin-bottom: 10px;">
+    <button class="ui orange button" (click)="importDeployedContract()" [class.loading]="importLoading"
+      [disabled]="importLoading || !importContractAddress">
+      Import
+    </button>
+    <div class="ui icon input">
+      <input [(ngModel)]="importContractAddress" type="text" class="atAddressField"
+        placeholder="ct_nv5B9...Mp59bv..." />
+      <i class="search icon"></i>
+    </div>
+  </div>
+
+  <div *ngIf="importError" class="ui info message">
+    <i class="close icon" (click)="importError = null"></i>
+    <div class="header">Instructions</div>
+    <p style="white-space: pre-line;">{{ importError }}</p>
+  </div>
+</div>
+
+<div class="ui section divider"></div>
+
 <!-- Deployed contracts start -->
 <div id="deployedContracts" (mouseover)="hover = true" (mouseleave)="hover = false">
   <span [ngStyle]="{
