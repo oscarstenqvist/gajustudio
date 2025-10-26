@@ -1,4 +1,6 @@
-# Æ Studio - Formerly known as 🔥 Fire Editor ! Aeternity's easy to use editor for writing smart contracts for the Æternity Blockchain !
+# 木 Studio - Fork of Æ Studio. Gajumarus's easy to use editor for writing smart contracts for the Gajumaru Blockchain !
+
+> **⚠️ DISCLAIMER:** This application currently runs on the aeternity network until the Gajumaru smart contract network is up and running.
 
 ## Install for Linux / Mac
 
@@ -15,5 +17,3 @@
 `-> visit localhost:4200 `
 
 Note: Some env vars are hardcoded in angular's environment files and might need to be changed for a local use.
-
-Questions / Feature requests: https://forum.aeternity.com/t/update-no-2-october-fire-editor-release-the-easy-to-use-web-ide-for-sophia/4673

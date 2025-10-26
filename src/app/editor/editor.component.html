@@ -1,6 +1,6 @@
 <!-- Top menu bar start  -->
 <div id="logoHeader" class="ui top attached inverted demo menu">
-  <img id="logo" src="/assets/aestudio.svg" />
+  <img id="logo" src="/assets/gajustudio.png" />
   <!-- <p id="logoText1">Æ&nbsp;</p>
     <p id="logoText2">Studio</p>
 
@@ -13,17 +13,11 @@
 <sui-sidebar-container id="theSideMenu" class="ui bottom attached segment theSideMenu">
   <sui-sidebar transition="slide along" class="inverted vertical" #sidebar>
     <!-- #oneCon creates a reference to each of the entries this ngFor creates ! -->
-    <app-contract-in-left-menu
-      #oneCon
-      style="width: 100%; height: auto"
-      *ngFor="let oneContract of contracts; let i = index"
-      [contract]="oneContract"
-      (showInTabs)="toggleTabAppearance({ contract: oneContract, triggerMode: 'on' })"
-      (mouseover)="oneCon.onHover()"
-      (mouseleave)="oneCon.unHover()"
-      (contractDeletion)="deleteContract($event)"
-      (showInTabsToggle)="toggleTabAppearance({ contract: oneContract, triggerMode: 'on' })"
-    >
+    <app-contract-in-left-menu #oneCon style="width: 100%; height: auto"
+      *ngFor="let oneContract of contracts; let i = index" [contract]="oneContract"
+      (showInTabs)="toggleTabAppearance({ contract: oneContract, triggerMode: 'on' })" (mouseover)="oneCon.onHover()"
+      (mouseleave)="oneCon.unHover()" (contractDeletion)="deleteContract($event)"
+      (showInTabsToggle)="toggleTabAppearance({ contract: oneContract, triggerMode: 'on' })">
     </app-contract-in-left-menu>
 
     <!-- reserved for eventual extra stuff<a class="item">2</a> -->
@@ -43,25 +37,18 @@
         </a>
 
         <ng-container #testing *ngFor="let oneContract of contracts; let i = index">
-          <a
-            style="float: left; border-radius: 0 !important"
-            *ngIf="oneContract.showInTabs"
-            (click)="triggerWindowRefresh(1); setTabAsActive(oneContract)"
-            class="contracttab item"
-            suiTabHeader="{{ i }}"
-          >
+          <a style="float: left; border-radius: 0 !important" *ngIf="oneContract.showInTabs"
+            (click)="triggerWindowRefresh(1); setTabAsActive(oneContract)" class="contracttab item"
+            suiTabHeader="{{ i }}">
             {{ oneContract.latestACI?.name }}
             <a>
-              <p
-                class="tabclosingx"
-                (click)="
+              <p class="tabclosingx" (click)="
                   toggleTabAppearance({ contract: oneContract, triggerMode: 'off' });
                   triggerWindowRefresh(200)
-                "
-              >
+                ">
                 &nbsp; &times;
-              </p></a
-            >
+              </p>
+            </a>
           </a>
         </ng-container>
 
@@ -71,15 +58,9 @@
 
       <!-- Editor Start -->
       <ng-container #oneCon *ngFor="let oneContract of contracts; let i = index">
-        <div
-          *ngIf="oneContract.showInTabs"
-          class="ui bottom attached segment"
-          suiTabContent="{{ i }}"
-        >
-          <app-one-editor-tab
-            [activeContract]="contracts[i]"
-            (activeContractChange)="saveContractChangesToContractsArray($event)"
-          >
+        <div *ngIf="oneContract.showInTabs" class="ui bottom attached segment" suiTabContent="{{ i }}">
+          <app-one-editor-tab [activeContract]="contracts[i]"
+            (activeContractChange)="saveContractChangesToContractsArray($event)">
           </app-one-editor-tab>
         </div>
       </ng-container>
@@ -118,29 +99,20 @@
       <h3 class="ui inverted header">Pick components:</h3>
       <div id="codeGenDisplayOptions">
         <div class="codeGenOption">
-          <input
-            type="checkbox"
-            [ngModel]="generator.addSdkSetup$ | async"
-            (ngModelChange)="generator.addSdkSetup$.next($event)"
-          />
+          <input type="checkbox" [ngModel]="generator.addSdkSetup$ | async"
+            (ngModelChange)="generator.addSdkSetup$.next($event)" />
           <span class="codeGenOptionLabel">SDK initialization</span>
           <br />
         </div>
         <div class="codeGenOption">
-          <input
-            type="checkbox"
-            [ngModel]="generator.addDeploy$ | async"
-            (ngModelChange)="generator.addDeploy$.next($event)"
-          />
+          <input type="checkbox" [ngModel]="generator.addDeploy$ | async"
+            (ngModelChange)="generator.addDeploy$.next($event)" />
           <span class="codeGenOptionLabel">Contract Deployment</span>
           <br />
         </div>
         <div class="codeGenOption">
-          <input
-            type="checkbox"
-            [ngModel]="generator.addCall$ | async"
-            (ngModelChange)="generator.addCall$.next($event)"
-          />
+          <input type="checkbox" [ngModel]="generator.addCall$ | async"
+            (ngModelChange)="generator.addCall$.next($event)" />
           <span class="codeGenOptionLabel">Contract Call</span>
           <br />
         </div>
@@ -148,12 +120,8 @@
       <br />
     </div>
 
-    <ngx-monaco-editor
-      *ngIf="generator.code$ | async"
-      id="generatedCodeEditor"
-      [ngModel]="generator.code$ | async"
-      [options]="generatedCodeEditorOptions"
-    ></ngx-monaco-editor>
+    <ngx-monaco-editor *ngIf="generator.code$ | async" id="generatedCodeEditor" [ngModel]="generator.code$ | async"
+      [options]="generatedCodeEditorOptions"></ngx-monaco-editor>
     <div class="ui form">
       <div class="field"></div>
     </div>
